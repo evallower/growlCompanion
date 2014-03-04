@@ -5,4 +5,4 @@ send notifications to growl
 
 Required Modules:
 
-Twisted, Json, gntp.notifier
+Twisted, Json, gntp
