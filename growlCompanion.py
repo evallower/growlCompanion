@@ -23,36 +23,35 @@ class Iphone(Protocol):
 
     def dataReceived(self, data):
         print data
-        jsonData = json.loads(data)
-        print jsonData
-        songTitle = jsonData[0]['title']
-        songArtist = jsonData[0]['artist']
-        songAlbum = jsonData[0]['album']
-        songDuration = jsonData[0]['duration']
-        print songArtist
-        print songAlbum
-        print songTitle
-        print songDuration
-        songInfo = (songArtist, songTitle, songAlbum)
-        songInfoDecoded = [x.encode('UTF-8') for x in songInfo] 
+        if (data.startswith ('[')):
+            jsonData = json.loads(data)
+            print jsonData
+            songTitle = jsonData[0]['title']
+            songArtist = jsonData[0]['artist']
+            songAlbum = jsonData[0]['album']
+            songDuration = jsonData[0]['duration']
+            playingStatus = jsonData[1]['playBackState']
+            print songArtist
+            print songAlbum
+            print songTitle
+            print songDuration
+            songInfo = (songArtist, songTitle, songAlbum)
+            songInfoDecoded = [x.encode('UTF-8') for x in songInfo]
 
-        # Send one message
-        growl.notify(
-            noteType = "New Messages",
-            title = "Now Playing",
-            description = songInfoDecoded,
-            icon = "http://example.com/icon.png",
-            sticky = False,
-            priority = 1,
-        )
+            if (playingStatus == "Pause"):
+                playingTitle = "Now Playing"
+            elif (playingStatus == "Play"):
+                playingTitle = "Paused"
 
-        #msg = "previous"
-
-        #for c in self.factory.clients:
-            #c.message(msg)
-
-    #def message(self, message):
-        #self.transport.write(message + '\n')
+         # Send one message
+            growl.notify(
+                noteType = "New Messages",
+                title = playingTitle,
+                description = songInfoDecoded,
+                icon = "http://example.com/icon.png",
+                sticky = False,
+                priority = 1,
+            )
 
 factory = Factory()
 factory.protocol = Iphone
