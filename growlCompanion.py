@@ -5,8 +5,8 @@ import gntp.notifier
 
 growl = gntp.notifier.GrowlNotifier(
     applicationName = "Music Companion",
-    notifications = ["New Updates","New Messages"],
-    defaultNotifications = ["New Messages"],
+    notifications = ["Music Status"],
+    defaultNotifications = ["Music Status"],
     # hostname = "computer.example.com", # Defaults to localhost
     # password = "abc123" # Defaults to a blank password
 )
@@ -26,17 +26,16 @@ class Iphone(Protocol):
         if (data.startswith ('[')):
             jsonData = json.loads(data)
             print jsonData
-            songTitle = jsonData[0]['title']
-            songArtist = jsonData[0]['artist']
-            songAlbum = jsonData[0]['album']
+            songTitle = jsonData[0]['title'].encode('UTF-8')
+            songArtist = jsonData[0]['artist'].encode('UTF-8')
+            songAlbum = jsonData[0]['album'].encode('UTF-8')
             songDuration = jsonData[0]['duration']
             playingStatus = jsonData[1]['playBackState']
             print songArtist
             print songAlbum
             print songTitle
             print songDuration
-            songInfo = (songArtist, songTitle, songAlbum)
-            songInfoDecoded = [x.encode('UTF-8') for x in songInfo]
+            songInfo = songArtist + " \n" + songTitle + " \n" + songAlbum
 
             if (playingStatus == "Pause"):
                 playingTitle = "Now Playing"
@@ -45,10 +44,10 @@ class Iphone(Protocol):
 
          # Send one message
             growl.notify(
-                noteType = "New Messages",
+                noteType = "Music Status",
                 title = playingTitle,
-                description = songInfoDecoded,
-                icon = "http://example.com/icon.png",
+                description = songInfo,
+                icon = "none",
                 sticky = False,
                 priority = 1,
             )
