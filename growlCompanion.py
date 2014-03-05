@@ -35,12 +35,12 @@ class Iphone(Protocol):
             print songAlbum
             print songTitle
             print songDuration
-            songInfo = songArtist + " \n" + songTitle + " \n" + songAlbum
+            songInfo = songArtist + " - " + songAlbum
 
             if (playingStatus == "Pause"):
-                playingTitle = "Now Playing"
+                playingTitle = songTitle
             elif (playingStatus == "Play"):
-                playingTitle = "Paused"
+                playingTitle = songTitle + " (Paused)"
 
          # Send one message
             growl.notify(
